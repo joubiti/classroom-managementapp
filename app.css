@@ -1,0 +1,27 @@
+body{
+	background-color: #292b2c;
+}
+
+#text{
+font-family: 'Open Sans', sans-serif;
+  font-weight: bold;
+  
+
+}
+input{
+	width: 10px;
+}
+#b1 {
+margin: auto;
+width: 100%;
+padding: 10px;
+}
+#b2 {
+    left      : 50%;
+    top       : 50%;
+    position  : absolute;
+    transform : translate(-50%, -50%);
+}
+label{
+  font-weight: bold;
+}
