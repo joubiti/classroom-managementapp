@@ -1,4 +1,8 @@
 import math
+from urllib.request import Request, urlopen
+from bs4 import BeautifulSoup as soup
+import sys
+
 
 student_id=0
 professor_id=0
@@ -36,6 +40,7 @@ class Classroom:
 		self.students=[]
 		self.professors=[]
 		global curriculum
+		self.exam_spreadsheet= self.get_exam_spreadsheet()
 
 	def display_info(self):
 		'Prints general info about classroom'
@@ -43,13 +48,10 @@ class Classroom:
 			Number of students in the classroom: {len(self.students)}
 			Number of professors in the classroom: {len(self.professors)}
 			Number of courses: {len(curriculum.coursework)}
+			Exam spreadsheet: {self.exam_spreadsheet}
 			""")
 		for course in curriculum.coursework:
-			for professor in self.professors:
-				if professor.id == course.professor_id:
-					print(f"The course {course.course_name} is being taken charge by the professor {professor.firstname.capitalize()} {professor.lastname.capitalize()}")
-				else:
-					pass
+			print(f"The course {course.course_name} is being taken charge by the professor {course.get_teacher().firstname.capitalize()} {course.get_teacher().lastname.capitalize()}")
 
 	def display_grades(self, student_id):
 		'Display grades of given student id'
@@ -62,6 +64,7 @@ class Classroom:
 							print(f'{course.course_name} :> {value}')
 	
 	def display_highestgrade(self, course_id):
+		'Prints student with the highest grade for given course id'
 		max_value= None
 		for student in self.students:
 			for key, value in student.show_grades().items():
@@ -75,6 +78,52 @@ class Classroom:
 				for student in self.students:
 					if student.id == id_highestgrade:
 						print(f"The highest grade for {course.course_name} is the student {student.firstname.capitalize()} {student.lastname.capitalize()} with a grade of {max_value}")
+
+	def display_lowestgrade(self, course_id):
+		'Prints student with the lowest grade for given course id'
+		min_value= None
+		for student in self.students:
+			for key, value in student.show_grades().items():
+				if key == course_id:
+					if min_value is None or value < min_value:
+						min_value= value
+						id_highestgrade= student.id
+		
+		for course in curriculum.coursework:
+			if course.id == course_id:
+				for student in self.students:
+					if student.id == id_highestgrade:
+						print(f"The lowest grade for {course.course_name} is the student {student.firstname.capitalize()} {student.lastname.capitalize()} with a grade of {min_value}")
+
+	def display_averagegrade(self, course_id):
+		'Prints average grade in a classroom for a given course id'
+		placeholder_list=[]
+		for course in curriculum.coursework:
+			if course.id == course_id:
+				for student in self.students:
+					for key, value in student.show_grades().items():
+						if key == course.id:
+							placeholder_list.append(value)
+		
+		for course in curriculum.coursework:
+			if course.id == course_id:
+				print(f"The average grade for {course.course_name} is {sum(placeholder_list)/len(placeholder_list)}")
+
+	def get_exam_spreadsheet(self):
+		links=[]
+		url = "https://ensaf.ac.ma/?controller=pages&action=emplois"
+		req = Request(url , headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'})
+		py_url=urlopen(req)
+		rawhtml=py_url.read()
+		scrape=soup(rawhtml,'lxml')
+		info=scrape.find('div',class_='table-responsive')
+		spreadsheets=info.tbody
+		auto=spreadsheets.tr
+		exam_fixture=auto.select_one("tr td:nth-of-type(2)")
+		for link in exam_fixture.find_all('a'):
+			autourl=link.get('href')
+		links.append(autourl)
+		return links[-1]
 
 	def update_grade(self, student_id, course_id, grade):
 		'Updates grade for given course id and student id'
@@ -173,3 +222,6 @@ class Course:
 		for professor in classe.professors:
 			if self.professor_id == professor.id:
 				return professor
+
+curriculum= Coursework()
+classe= Classroom()
