@@ -30,6 +30,7 @@ class Professor:
 			curriculum.add_course(course, self.id)
 
 	def get_courses(self):
+		'Returns a list of courses taken in charge by professor'
 		return [entry.course_name for entry in curriculum.coursework if entry.professor_id== self.id]
 
 
@@ -110,6 +111,7 @@ class Classroom:
 				print(f"The average grade for {course.course_name} is {sum(placeholder_list)/len(placeholder_list)}")
 
 	def get_exam_spreadsheet(self):
+		'Scrapes the ENSAF website to fetch the exam spreadsheet'
 		links=[]
 		url = "https://ensaf.ac.ma/?controller=pages&action=emplois"
 		req = Request(url , headers={'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'})
@@ -150,6 +152,7 @@ class Classroom:
 		for professor in self.professors:
 			if professor.firstname== firstname and professor.lastname== lastname:
 				self.professors.remove(professor)
+		curriculum.coursework= [entry for entry in curriculum.coursework if entry.get_teacher() is not None]
 
 	def add_student(self, firstname, lastname):
 		'Add student to classroom given first and last name'
