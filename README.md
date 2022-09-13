@@ -1,4 +1,5 @@
-# classroom-managementapp
+# Classroom management application
+![lastupdate](https://img.shields.io/github/last-commit/joubiti/classroom-managementapp)
 
 This project was done in the context of a 1-month summer internship at [Enhanced Technologies](http://www.enhanced-tech.ma/) in Rabat, in which I was asked to develop an application to manage students with PHP and PostgreSQL, a certain degree of flexbility was allowed for me to implement any additional functionalities for my design.
 
