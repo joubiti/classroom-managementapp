@@ -17,7 +17,7 @@ The main objectives of the conception of such an application are to offer a set 
 - The student can also choose to subscribe to the notification system, upon which he'll be able to receive an email whenever grades are updated.
 
 ## CLI application
-This projet is also available as a command line interface application for demo purposes, albeit without any database management system.
+This project is also available as a command line interface application for demo purposes, albeit without any database management system.
 
 ![image](https://user-images.githubusercontent.com/104909670/189879156-de78838e-d0c8-42be-98db-08548c455e15.png)
 
